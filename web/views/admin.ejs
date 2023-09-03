@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- 
+         - primary meta tags
+         -->
+      <title>Admin</title>
+      <meta name="title" content="">
+      <meta name="description" content=".">
+
+      <!-- 
+         - custom css link
+         -->
+      <link rel="stylesheet" href="main.css">
+      <!-- 
+         - google font link
+         -->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link
+         href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap"
+         rel="stylesheet">
+      <!-- 
+         - preload images
+         -->
+      <link rel="preload" as="image" href="hero-banner.png">
+   </head>
+   <body>
+
+      <main>
+         <article>
+            <!-- 
+               - #add
+               -->
+            <section class="section market" aria-label="crypto market live price">
+               <div class="container">
+                  <h1 class="h2 section-title text-center">Add a new input</h1>
+                  <p class="section-text text-center">
+                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  </p>
+                  <div class="con">
+                     <form class="form" action="/admin/add" method="POST">
+                        <div class="input-container">
+                           <input placeholder="From" type="text" id="name" name="name" required>
+                        </div>
+                        <div class="input-container">
+                           <input placeholder="To" type="text" id="description" name="description" required>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="form-group">
+        <label for="fileField" class="attachment">
+          <div class="row btn-file">
+            <div class="btn-file__preview"></div>
+            <div class="btn-file__actions">
+              <div class="btn-file__actions__item col-xs-12 text-center">
+                <div class="btn-file__actions__item--shadow">
+                  <i class="fa fa-plus fa-lg fa-fw" aria-hidden="true"></i>
+                  <div class="visible-xs-block"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input name="file" type="file" id="fileField">
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+                        </div>
+                        <button class="submit" type="submit">
+                        Add a new item 
+                        </button>
+                     </form>
+                  </div>
+               </div>
+            </section>
+
+
+
+           
+            <section class="section market" aria-label="crypto market live price">
+               <div class="container">
+                  <h2 class="h2 section-title text-center">Table of data</h2>
+                  <p class="section-text text-center">
+                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat..
+                  </p>
+                  <div class="table-container">
+                     <table class="market-table">
+  <thead class="table-head">
+    <tr class="table-row">
+      <th class="table-heading">Name</th>
+      <th class="table-heading">Description</th>
+      <th class="table-heading">Serial number</th>
+      <th class="table-heading">Date</th>
+      <th class="table-heading">Edit</th>
+      <th class="table-heading">Delete</th>
+      <th class="table-heading">Qr Code</th>
+    </tr>
+  </thead>
+  <tbody class="table-body">
+    <% if (items.length === 0) { %>
+      <tr>
+        <td colspan="6">No results found</td>
+      </tr>
+    <% } else { %>
+      <% items.forEach(function(item) { %>
+        <tr class="table-row">
+          <td class="table-data wrapper">
+            <div>
+              <h3 class="h3 coin-name"><%= item.name %></h3>
+              <span class="span"><%= item.serialNumber %></span>
+            </div>
+          </td>
+          <td class="table-data">
+            <data class="data" value=""><%= item.description %></data>
+          </td>
+                    <td class="table-data">
+            <data class="data" value=""><%= item.serialNumber %></data>
+          </td>
+          <td class="table-data">
+            <data class="data" value=""><%= item.date %></data>
+          </td>
+          <td class="table-data">
+            <div class="wrapper-flex">
+              <data class="data" value="">
+                <a href="/item/edit/<%= item.serialNumber %>">
+                <button class="edit">
+                  <ion-icon name="create" aria-hidden="true"></ion-icon>
+                </button>
+                  </a>
+              </data>
+            </div>
+          </td>
+          <td class="table-data">
+            <div class="wrapper-flex">
+              <data class="data" value="">
+                <form action="/admin/delete/<%= item.serialNumber %>" method="POST">
+                  <button class="delete">
+                    <ion-icon name="trash-bin" aria-hidden="true"></ion-icon>
+                  </button>
+                </form>
+              </data>
+            </div>
+          </td>
+          <td class="table-data">
+            <div class="wrapper-flex">
+              <data class="data" value="">
+                <a href="/<%= item.serialNumber %>.png" download>
+                <button class="edit">
+                  <ion-icon name="qr-code-outline" aria-hidden="true"></ion-icon>
+                </button>
+                </a>
+              </data>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    <% } %>
+  </tbody>
+</table>
+
+                  </div>
+               </div>
+            </section>
+
+         </article>
+      </main>
+
+      <!-- 
+         - ionicon-link
+         -->
+      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+   </body>
+</html>
