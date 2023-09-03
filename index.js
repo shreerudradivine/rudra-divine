@@ -175,7 +175,7 @@ app.post('/admin/add', upload.single('file'), async (req, res) => {
     const { from, to } = req.body;
     const imagePath = req.file ? req.file.filename : 'fail';
 
-    const item = new Item({ from, to, path: imagePath });
+    const item = new Item({ from:from, to:to, path: imagePath });
     await item.save();
 
     res.redirect('/admin');
@@ -210,11 +210,45 @@ app.post('/admin/delete/:id', async (req, res) => {
 });
 
 // search route - search item
+//app.get('/search', async (req, res) => {
+//  try {
+//    const { number } = req.query;
+//    const item = await Item.findOne({ from,to });
+//    if (number>from && number<to){
+//  console.log("The number is between the two numbers");
+//      const item = await Item.findOne({ from,to });
+//      const path = item.path;
+//  }
+    
+//    res.redirect(`/item/${serial}`);
+//  } catch (err) {
+//    console.error(err);
+//    res.status(500).send('Internal Server Error');
+//  }
+//});
+
+
+// search route - search item
 app.get('/search', async (req, res) => {
   try {
-    const { serial } = req.query;
-    
-    res.redirect(`/item/${serial}`);
+    const { number } = req.query;
+    const items = await Item.find({}); // Retrieve all items from the database
+
+    let foundItem = null;
+    for (const item of items) {
+      if (number > item.from && number < item.to) {
+        console.log("The number is between the two numbers");
+        foundItem = item;
+        break;
+      }
+    }
+
+    if (foundItem) {
+      const path = foundItem.path;
+      res.redirect(`/${path}`);
+    } else {
+      res.status(404).send('Item not found');
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');

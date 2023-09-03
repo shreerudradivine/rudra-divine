@@ -1221,12 +1221,12 @@ body {
 
 .input {
   min-height: 50px;
-  max-width: 150px;
+  max-width: 185px;
   padding: 0 1rem;
-  color: #fff;
+  color: var(--white);
   font-size: var(--body-md);
   font-weight: var(--fw-600);
-  border: 1px solid #5e4dcd;
+  border: 1px solid var(--blue-violet);
   border-radius: var(--radius-pill) 0 0 var(--radius-pill);
   background-color: transparent;
 }
@@ -1236,8 +1236,8 @@ body {
   padding: .5em 1em;
   border: none;
   border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
-  background-color: #5e4dcd;
-  color: #fff;
+  background-color: var(--blue-violet);
+  color: var(--white);
   font-size: var(--body-md);
   font-weight: var(--fw-600);
   cursor: pointer;
@@ -1245,11 +1245,11 @@ body {
 }
 
 .button--submit:hover {
-  background-color: #5e5dcd;
+  background-color: var(--blue-violet);
 }
 
 .input:focus, .input:focus-visible {
-  border-color: #3898EC;
+  border-color: var(--blue-violet);
   outline: none;
 }
 
