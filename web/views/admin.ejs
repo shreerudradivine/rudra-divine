@@ -42,34 +42,19 @@
                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                   </p>
                   <div class="con">
-                     <form class="form" action="/admin/add" method="POST">
+                     <form class="form" action="/admin/add" enctype="multipart/form-data" method="POST">
                         <div class="input-container">
-                           <input placeholder="From" type="text" id="name" name="name" required>
+                           <input placeholder="From" type="text" id="from" name="from" required>
                         </div>
                         <div class="input-container">
-                           <input placeholder="To" type="text" id="description" name="description" required>
-<div class="container">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <div class="form-group">
-        <label for="fileField" class="attachment">
-          <div class="row btn-file">
-            <div class="btn-file__preview"></div>
-            <div class="btn-file__actions">
-              <div class="btn-file__actions__item col-xs-12 text-center">
-                <div class="btn-file__actions__item--shadow">
-                  <i class="fa fa-plus fa-lg fa-fw" aria-hidden="true"></i>
-                  <div class="visible-xs-block"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <input name="file" type="file" id="fileField">
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
+                           <input placeholder="To" type="text" id="to" name="to" required>
+
+
+                        </div>
+                                               <div class="input-container">
+                                                 <input type="file" name="file" accept="image/png" required>
+
+
 
                         </div>
                         <button class="submit" type="submit">
@@ -93,13 +78,11 @@
                      <table class="market-table">
   <thead class="table-head">
     <tr class="table-row">
-      <th class="table-heading">Name</th>
-      <th class="table-heading">Description</th>
-      <th class="table-heading">Serial number</th>
+      <th class="table-heading">From</th>
+      <th class="table-heading">To</th>
+      <th class="table-heading">Path</th>
       <th class="table-heading">Date</th>
-      <th class="table-heading">Edit</th>
       <th class="table-heading">Delete</th>
-      <th class="table-heading">Qr Code</th>
     </tr>
   </thead>
   <tbody class="table-body">
@@ -112,15 +95,14 @@
         <tr class="table-row">
           <td class="table-data wrapper">
             <div>
-              <h3 class="h3 coin-name"><%= item.name %></h3>
-              <span class="span"><%= item.serialNumber %></span>
+              <h3 class="h3 coin-name"><%= item.to %></h3>
             </div>
           </td>
           <td class="table-data">
-            <data class="data" value=""><%= item.description %></data>
+            <data class="data" value=""><%= item.from %></data>
           </td>
                     <td class="table-data">
-            <data class="data" value=""><%= item.serialNumber %></data>
+            <data class="data" value=""><%= item.path %></data>
           </td>
           <td class="table-data">
             <data class="data" value=""><%= item.date %></data>
@@ -128,18 +110,7 @@
           <td class="table-data">
             <div class="wrapper-flex">
               <data class="data" value="">
-                <a href="/item/edit/<%= item.serialNumber %>">
-                <button class="edit">
-                  <ion-icon name="create" aria-hidden="true"></ion-icon>
-                </button>
-                  </a>
-              </data>
-            </div>
-          </td>
-          <td class="table-data">
-            <div class="wrapper-flex">
-              <data class="data" value="">
-                <form action="/admin/delete/<%= item.serialNumber %>" method="POST">
+                <form action="/admin/delete/<%= item.path %>" method="POST">
                   <button class="delete">
                     <ion-icon name="trash-bin" aria-hidden="true"></ion-icon>
                   </button>
@@ -150,9 +121,9 @@
           <td class="table-data">
             <div class="wrapper-flex">
               <data class="data" value="">
-                <a href="/<%= item.serialNumber %>.png" download>
+                <a href="/<%= item.path %>.png" >
                 <button class="edit">
-                  <ion-icon name="qr-code-outline" aria-hidden="true"></ion-icon>
+                  <ion-icon name="image" aria-hidden="true"></ion-icon>
                 </button>
                 </a>
               </data>

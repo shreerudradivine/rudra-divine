@@ -76,12 +76,7 @@ app.get('/item', (req, res) => {
 app.get('/admin', authenticateAdmin, async (req, res) => {
   try {
     const items = await Item.find();
-        // Get the database statistics
-    // const stats = await db.stats();
-    // const { storageSize, dataSize } = stats;
-    // const percentageUsed = ((dataSize / storageSize) * 100).toFixed(2);
-    // const percentageLeft = (100 - percentageUsed).toFixed(2);
-    
+
     res.render('admin', { items });
   } catch (err) {
     console.error(err);
@@ -148,7 +143,7 @@ app.get('/discord', (req, res) => {
 })
 
 // Serve static files (including QR code images)
-app.use(express.static(path.join(__dirname, 'qrcodes')));
+app.use(express.static(path.join(__dirname, 'products')));
 
 // Set up multer storage
 const storage = multer.diskStorage({
@@ -157,40 +152,36 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const fileName = file.originalname.toLowerCase().split(' ').join('-');
-    cb(null, fileName); // Set the file name for the uploaded image
-  }
+    cb(null, fileName);
+  },
 });
-
-// Set up multer file filter
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/png') {
-    cb(null, true); // Accept only PNG images
-  } else {
-    cb(null, false);
-  }
-};
 
 // Set up multer upload
 const upload = multer({
   storage: storage,
-  fileFilter: fileFilter
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PNG images are allowed'));
+    }
+  },
 });
-
 //posts
 
-app.post('/admin/add', upload.single('image'), async (req, res) => {
+// Add the upload middleware to the route
+app.post('/admin/add', upload.single('file'), async (req, res) => {
   try {
     const { from, to } = req.body;
-    const path = req.file ? req.file.filename : '';
-    const item = new Item({ name, description, path });
+    const imagePath = req.file ? req.file.filename : 'fail';
+
+    const item = new Item({ from, to, path: imagePath });
     await item.save();
 
-
-    
     res.redirect('/admin');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
   }
 });
 
@@ -198,16 +189,16 @@ app.post('/admin/add', upload.single('image'), async (req, res) => {
 // Delete route - delete item
 app.post('/admin/delete/:id', async (req, res) => {
   try {
-    const result = await Item.findOneAndDelete({ serialNumber: req.params.id });
+    const result = await Item.findOneAndDelete({ path: req.params.id });
 
-        const qrCodeFilePath = `./qrcodes/${req.params.id}.png`;
+        const iFilePath = `./products/${req.params.id}.png`;
 
     // Delete the QR code image
-    fs.unlink(qrCodeFilePath, (err) => {
+    fs.unlink(iFilePath, (err) => {
       if (err) {
         console.error(err);
       } else {
-        console.log('QR code image deleted successfully');
+        console.log('Image deleted successfully');
       }
     });
     console.log("Deleted User: ", result);
