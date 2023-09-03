@@ -63,8 +63,8 @@ app.get('/home', (req, res) => {
     title: "Home"
   })
 })
-app.get('/item', (req, res) => {
-  res.render('item', {
+app.get('/product', (req, res) => {
+  res.render('product', {
     title: "Home"
   })
 })
@@ -101,16 +101,11 @@ app.get('/qr/:id', (req, res) => {
   res.render('qrpage', { serialNo })
 })
 
-app.get('/item/:id', async (req, res) => {
+app.get('/product/:id', async (req, res) => {
   try {
-    const serialNo = req.params.id;
-    const item = await Item.findOne({ serialNumber: serialNo });
+    const product = req.params.id;
 
-    if (!item) {
-      return res.status(404).render('error', { message: 'Item not found' });
-    }
-
-    res.render('item', { item });
+    res.render('product', { product });
   } catch (err) {
     console.error(err);
     res.status(500).render('error', { message: 'Internal Server Error' });
@@ -181,7 +176,7 @@ app.post('/admin/add', upload.single('file'), async (req, res) => {
     res.redirect('/admin');
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    res.status(500).render('error', { message: 'Internal Server Error' });
   }
 });
 
@@ -193,7 +188,7 @@ app.post('/admin/delete/:id', async (req, res) => {
 
         const iFilePath = `./products/${req.params.id}.png`;
 
-    // Delete the QR code image
+    // Delete the image
     fs.unlink(iFilePath, (err) => {
       if (err) {
         console.error(err);
@@ -205,7 +200,7 @@ app.post('/admin/delete/:id', async (req, res) => {
     res.redirect('/admin');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).render('error', { message: 'Internal Server Error' });
   }
 });
 
@@ -237,7 +232,7 @@ app.get('/search', async (req, res) => {
     let foundItem = null;
     for (const item of items) {
       if (number > item.from && number < item.to) {
-        console.log("The number is between the two numbers");
+        console.log("Success");
         foundItem = item;
         break;
       }
@@ -245,13 +240,13 @@ app.get('/search', async (req, res) => {
 
     if (foundItem) {
       const path = foundItem.path;
-      res.redirect(`/${path}`);
+      res.redirect(`/product/${path}`);
     } else {
-      res.status(404).send('Item not found');
+      res.status(404).render('error', { message: 'Item not found' });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).render('error', { message: 'Internal Server Error' });
   }
 });
 

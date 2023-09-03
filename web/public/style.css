@@ -1260,3 +1260,14 @@ body {
         align-items: center;
         height: 10vh;
     }
+
+.image {
+  border-radius: 8px;
+  --section-padding: 180px 64px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
