@@ -86,8 +86,9 @@ app.get('/product/:id', async (req, res) => {
 
 
 
-// Serve static files (including QR code images)
+// Serve static files (including images)
 app.use(express.static(path.join(__dirname, 'products')));
+app.use(express.static(path.join(__dirname, 'tmp')));
 
 // Set up multer storage
 const storage = multer.diskStorage({
@@ -113,12 +114,25 @@ const upload = multer({
 });
 
 // Add the upload middleware to the route
+
 app.post('/admin/add', upload.single('file'), async (req, res) => {
   try {
     const { from, to } = req.body;
-    const imagePath = req.file ? req.file.filename : 'fail';
+    const file = req.file;
 
-    const item = new Item({ from: from, to: to, path: imagePath });
+    // Check if the uploaded file is a PNG image
+    if (file.mimetype !== 'image/png') {
+      throw new Error('Only PNG images are allowed');
+    }
+
+    // Generate a unique filename for the uploaded image
+    const fileName = file.originalname.toLowerCase().split(' ').join('-');
+    const imagePath = `tmp/${fileName}`;
+
+    // Move the uploaded file to the 'tmp' directory
+    fs.renameSync(file.path, imagePath);
+
+    const item = new Item({ from, to, path: fileName });
     await item.save();
 
     res.redirect('/admin');
@@ -128,11 +142,12 @@ app.post('/admin/add', upload.single('file'), async (req, res) => {
   }
 });
 
+
 // Delete route - delete item
 app.post('/admin/delete/:id', async (req, res) => {
   try {
     const result = await Item.findOneAndDelete({ path: req.params.id });
-    const iFilePath = `./products/${req.params.id}.png`;
+    const iFilePath = `./tmp/${req.params.id}`;
 
     // Delete the image
     fs.unlink(iFilePath, (err) => {
