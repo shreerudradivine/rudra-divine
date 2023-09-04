@@ -92,7 +92,7 @@ app.use(express.static(path.join(__dirname, 'products')));
 // Set up multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'products'); // Set the destination folder for uploaded images
+    cb(null, 'tmp/'); // Set the destination directory for uploaded images
   },
   filename: (req, file, cb) => {
     const fileName = file.originalname.toLowerCase().split(' ').join('-');
