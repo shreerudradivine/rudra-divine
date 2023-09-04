@@ -90,31 +90,10 @@ app.get('/product/:id', async (req, res) => {
 app.use(express.static(path.join(__dirname, 'products')));
 app.use(express.static(path.join(__dirname, 'tmp')));
 
-// Set up multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'tmp'); // Set the destination directory for uploaded images
-  },
-  filename: (req, file, cb) => {
-    const fileName = file.originalname.toLowerCase().split(' ').join('-');
-    cb(null, fileName);
-  },
-});
+const upload = multer({ dest: 'tmp/' })
 
-// Set up multer upload
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'image/png') {
-      cb(null, true);
-    } else {
-      cb(new Error('Only PNG images are allowed'));
-    }
-  },
-});
-
-// Add the upload middleware to the route
-
+  // Add the upload middleware to the route
+  
 app.post('/admin/add', upload.single('file'), async (req, res) => {
   try {
     const { from, to } = req.body;
@@ -141,7 +120,6 @@ app.post('/admin/add', upload.single('file'), async (req, res) => {
     res.status(500).render('error', { message: 'Internal Server Error' });
   }
 });
-
 
 // Delete route - delete item
 app.post('/admin/delete/:id', async (req, res) => {
