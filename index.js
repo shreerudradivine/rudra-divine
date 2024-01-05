@@ -94,32 +94,39 @@ const upload = multer({ dest: 'tmp/' })
 
   // Add the upload middleware to the route
   
-app.post('/admin/add', upload.single('file'), async (req, res) => {
-  try {
-    const { from, to } = req.body;
-    const file = req.file;
+  app.post('/admin/add', upload.single('file'), async (req, res) => {
+    try {
+      const { from, to } = req.body;
+      const file = req.file;
+  
+      // Check if the uploaded file is a PNG image
+      if (file.mimetype !== 'image/png') {
+        throw new Error('Only PNG images are allowed');
+      }
+  
+      // Generate a unique filename for the uploaded image
+      const fileName = file.originalname.toLowerCase().split(' ').join('-');
+      const imagePath = `tmp/${fileName}`;
+         // Check if a file with the same name already exists
 
-    // Check if the uploaded file is a PNG image
-    if (file.mimetype !== 'image/png') {
-      throw new Error('Only PNG images are allowed');
+if (fs.existsSync(imagePath)) {
+res.status(404).render('error', { message: 'A file with the same name already exists' });
+}
+
+  
+      // Move the uploaded file to the 'tmp' directory
+      fs.renameSync(file.path, imagePath);
+  
+      const item = new Item({ from, to, path: fileName });
+      await item.save();
+  
+      res.redirect('/admin');
+    } catch (error) {
+      console.error(error);
+      res.status(500).render('error', { message: 'Internal Server Error' });
     }
+  });
 
-    // Generate a unique filename for the uploaded image
-    const fileName = file.originalname.toLowerCase().split(' ').join('-');
-    const imagePath = `tmp/${fileName}`;
-
-    // Move the uploaded file to the 'tmp' directory
-    fs.renameSync(file.path, imagePath);
-
-    const item = new Item({ from, to, path: fileName });
-    await item.save();
-
-    res.redirect('/admin');
-  } catch (error) {
-    console.error(error);
-    res.status(500).render('error', { message: 'Internal Server Error' });
-  }
-});
 
 // Delete route - delete item
 app.post('/admin/delete/:id', async (req, res) => {

@@ -6,4 +6,4 @@ hidden = [".config", "package-lock.json"]
 channel = "stable-23_05"
 
 [deployment]
-run = ["sh", "-c", "node index.js"]
+run = ["node index.js"]

@@ -1270,3 +1270,29 @@ body {
   text-align: center;
 }
 
+@media (max-width: 767px) {
+  .image img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.marg {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+
