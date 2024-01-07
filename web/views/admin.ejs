@@ -42,25 +42,19 @@
                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                   </p>
                   <div class="con">
-                     <form class="form" action="/admin/add" enctype="multipart/form-data" method="POST">
-                        <div class="input-container">
-                           <input placeholder="From" type="text" id="from" name="from" required>
-                        </div>
-                        <div class="input-container">
-                           <input placeholder="To" type="text" id="to" name="to" required>
+                    <form class="form" action="/admin/add" method="POST">
+                      <div class="input-container">
+                        <input placeholder="From" type="text" id="from" name="from" required>
+                      </div>
+                      <div class="input-container">
+                        <input placeholder="To" type="text" id="to" name="to" required>
+                      </div>
+                      <div class="input-container">
+                        <input placeholder="Filename (e.g. image.png)" type="text" id="file" name="file" required>
+                      </div>
+                      <button class="submit" type="submit">Add a new item</button>
+                    </form>
 
-
-                        </div>
-                                               <div class="input-container">
-                                                 <input type="file" name="file" accept="image/png" required>
-
-
-
-                        </div>
-                        <button class="submit" type="submit">
-                        Add a new item 
-                        </button>
-                     </form>
                   </div>
                </div>
             </section>

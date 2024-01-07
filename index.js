@@ -1,9 +1,7 @@
 const bodyParser = require("body-parser");
 const path = require("path");
 const ejs = require("ejs");
-const multer = require('multer');
 const mongoose = require('mongoose');
-const fs = require('fs');
 const config = require('./config.json');
 const port = 8080;
 
@@ -29,6 +27,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.engine("html", ejs.renderFile);
 app.set('view engine', 'ejs');
@@ -90,60 +89,34 @@ app.get('/product/:id', async (req, res) => {
 app.use(express.static(path.join(__dirname, 'products')));
 app.use(express.static(path.join(__dirname, 'tmp')));
 
-const upload = multer({ dest: 'tmp/' })
-
   // Add the upload middleware to the route
   
-  app.post('/admin/add', upload.single('file'), async (req, res) => {
-    try {
-      const { from, to } = req.body;
-      const file = req.file;
-  
-      // Check if the uploaded file is a PNG image
-      if (file.mimetype !== 'image/png') {
-        throw new Error('Only PNG images are allowed');
-      }
-  
-      // Generate a unique filename for the uploaded image
-      const fileName = file.originalname.toLowerCase().split(' ').join('-');
-      const imagePath = `tmp/${fileName}`;
-         // Check if a file with the same name already exists
+app.post('/admin/add', async (req, res) => {
+  try {
+    const { from, to, file } = req.body;
 
-if (fs.existsSync(imagePath)) {
-res.status(404).render('error', { message: 'A file with the same name already exists' });
-}
+    // Convert the filename to lowercase and replace spaces with dashes
+    const fileName = file.toLowerCase().split(' ').join('-');
 
-  
-      // Move the uploaded file to the 'tmp' directory
-      fs.renameSync(file.path, imagePath);
-  
-      const item = new Item({ from, to, path: fileName });
-      await item.save();
-  
-      res.redirect('/admin');
-    } catch (error) {
-      console.error(error);
-      res.status(500).render('error', { message: 'Internal Server Error' });
-    }
-  });
+    // Create a new item with the processed filename
+    const item = new Item({ from, to, path: fileName });
+    await item.save();
+
+    res.redirect('/admin');
+  } catch (error) {
+    console.error(error);
+    res.status(500).render('error', { message: 'Internal Server Error' });
+  }
+});
+
 
 
 // Delete route - delete item
 app.post('/admin/delete/:id', async (req, res) => {
   try {
     const result = await Item.findOneAndDelete({ path: req.params.id });
-    const iFilePath = `./tmp/${req.params.id}`;
 
-    // Delete the image
-    fs.unlink(iFilePath, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log('Image deleted successfully');
-      }
-    });
-
-    console.log("Deleted User: ", result);
+    console.log("Deleted item: ", result);
     res.redirect('/admin');
   } catch (err) {
     console.error(err);
